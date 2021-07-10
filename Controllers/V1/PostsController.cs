@@ -2,14 +2,16 @@
 using System;
 using System.Collections.Generic;
 using WebApplicationWithDocker.Contracts.V1;
+using WebApplicationWithDocker.Contracts.V1.Requests;
+using WebApplicationWithDocker.Contracts.V1.Responses;
 using WebApplicationWithDocker.Domain;
 
 namespace WebApplicationWithDocker.Controllers.V1
 {
-    public class Posts : Controller
+    public class PostsController : Controller
     {
         private List<Post> posts;
-        public Posts()
+        public PostsController()
         {
             this.posts = new List<Post>();
             for (int i = 0; i < 100; i++)
@@ -24,15 +26,19 @@ namespace WebApplicationWithDocker.Controllers.V1
         }
 
         [HttpPost(ApiRoutes.Posts.Create)]
-        public IActionResult Create([FromBody] Post post)
+        public IActionResult Create([FromBody] CreatePostRequest postRequest)
         {
+            var post = new Post { Id = postRequest.Id };
             if (string.IsNullOrEmpty(post.Id))
                 post.Id = Guid.NewGuid().ToString();
 
             this.posts.Add(post);
+
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + "/" + ApiRoutes.Posts.Get.Replace("{post.Id}", post.Id);
-            return Created(locationUri, post);
+
+            var response = new PostResponse { Id = post.Id };
+            return Created(locationUri, response);
         }
     }
 }
