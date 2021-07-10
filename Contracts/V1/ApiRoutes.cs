@@ -8,6 +8,8 @@
         public static class Posts
         {
             public const string GetAll = _base + "/posts";
+            public const string Get = _base + "/posts/{post.Id}";
+            public const string Create = _base + "/posts";
         }
     }
 }

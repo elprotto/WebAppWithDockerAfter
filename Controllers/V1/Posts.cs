@@ -22,5 +22,17 @@ namespace WebApplicationWithDocker.Controllers.V1
         {
             return Ok(this.posts);
         }
+
+        [HttpPost(ApiRoutes.Posts.Create)]
+        public IActionResult Create([FromBody] Post post)
+        {
+            if (string.IsNullOrEmpty(post.Id))
+                post.Id = Guid.NewGuid().ToString();
+
+            this.posts.Add(post);
+            var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+            var locationUri = baseUrl + "/" + ApiRoutes.Posts.Get.Replace("{post.Id}", post.Id);
+            return Created(locationUri, post);
+        }
     }
 }
