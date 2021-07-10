@@ -7,6 +7,9 @@ using Microsoft.OpenApi.Models;
 using WebApplicationWithDocker.Data.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
+using WebApplicationWithDocker.Installers;
+using System;
 
 namespace WebApplicationWithDocker
 {
@@ -22,16 +25,8 @@ namespace WebApplicationWithDocker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"))
-                );
-            //services.AddDefaultIdentity<IdentityUser>();
+            services.InstallerServicesInAssembly(Configuration);
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
