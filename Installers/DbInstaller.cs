@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplicationWithDocker.Data.Migrations;
+using WebApplicationWithDocker.Services;
 
 namespace WebApplicationWithDocker.Installers
 {
@@ -20,7 +21,7 @@ namespace WebApplicationWithDocker.Installers
                     Configuration.GetConnectionString("DefaultConnection"))
                 );
             //services.AddDefaultIdentity<IdentityUser>();
-
+            services.AddSingleton<IPostService, PostService>();
         }
     }
 }
