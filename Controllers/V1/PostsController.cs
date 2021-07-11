@@ -41,8 +41,19 @@ namespace WebApplicationWithDocker.Controllers.V1
                 Id = postId,
                 Name = request.Name
             };
-            if(this.postService.updatePost(post))
+            if(this.postService.UpdatePost(post))
                 return Ok(post);
+
+            return NotFound();
+        }
+
+        [HttpDelete(ApiRoutes.Posts.Delete)]
+        public IActionResult Delete([FromRoute] Guid postId)
+        {
+            var deletedPost = this.postService.DeletePost(postId);
+
+            if (deletedPost)
+                return NoContent();
 
             return NotFound();
         }
