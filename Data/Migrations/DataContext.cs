@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WebApplicationWithDocker.Domain;
 
 namespace WebApplicationWithDocker.Data.Migrations
 {
@@ -10,5 +11,7 @@ namespace WebApplicationWithDocker.Data.Migrations
         {
 
         }
+
+        public DbSet<Post> Posts { get; set; }
     }
 }

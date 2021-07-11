@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 using WebApplicationWithDocker.Contracts.V1;
 using WebApplicationWithDocker.Contracts.V1.Requests;
 using WebApplicationWithDocker.Contracts.V1.Responses;
@@ -18,15 +19,15 @@ namespace WebApplicationWithDocker.Controllers.V1
         }
 
         [HttpGet(ApiRoutes.Posts.GetAll)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(this.postService.GetPosts());
+            return Ok(await this.postService.GetPostsAsync());
         }
 
         [HttpGet(ApiRoutes.Posts.Get)]
-        public IActionResult Get([FromRoute]Guid postId)
+        public async Task<IActionResult> Get([FromRoute]Guid postId)
         {
-            var post = this.postService.GetPostById(postId);
+            var post = await this.postService.GetPostByIdAsync(postId);
             if (post == null)
                 return NotFound();
 
@@ -34,23 +35,25 @@ namespace WebApplicationWithDocker.Controllers.V1
         }
 
         [HttpPut(ApiRoutes.Posts.Update)]
-        public IActionResult Update([FromRoute] Guid postId, [FromBody] UpdatePostRequest request)
+        public async Task<IActionResult> Update(
+            [FromRoute] Guid postId, 
+            [FromBody] UpdatePostRequest request)
         {
             var post = new Post
             {
                 Id = postId,
                 Name = request.Name
             };
-            if(this.postService.UpdatePost(post))
+            if(await this.postService.UpdatePostAsync(post))
                 return Ok(post);
 
             return NotFound();
         }
 
         [HttpDelete(ApiRoutes.Posts.Delete)]
-        public IActionResult Delete([FromRoute] Guid postId)
+        public async Task<IActionResult> Delete([FromRoute] Guid postId)
         {
-            var deletedPost = this.postService.DeletePost(postId);
+            var deletedPost = await this.postService.DeletePostAsync(postId);
 
             if (deletedPost)
                 return NoContent();
@@ -59,16 +62,16 @@ namespace WebApplicationWithDocker.Controllers.V1
         }
 
         [HttpPost(ApiRoutes.Posts.Create)]
-        public IActionResult Create([FromBody] CreatePostRequest postRequest)
+        public async Task<IActionResult> Create([FromBody] CreatePostRequest postRequest)
         {
             var post = new Post();
             if (postRequest != null)
-                post.Id = postRequest.Id;
+                post.Name = postRequest.Name;
 
             if (post.Id == Guid.Empty)
                 post.Id = Guid.NewGuid();
 
-            this.postService.GetPosts().Add(post);
+            await this.postService.CreatePostAsync(post);
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + "/" + ApiRoutes.Posts.Get.Replace("{post.Id}", post.Id.ToString());

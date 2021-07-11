@@ -21,7 +21,7 @@ namespace WebApplicationWithDocker.Installers
                     Configuration.GetConnectionString("DefaultConnection"))
                 );
             //services.AddDefaultIdentity<IdentityUser>();
-            services.AddSingleton<IPostService, PostService>();
+            services.AddScoped<IPostService, PostService>();
         }
     }
 }
