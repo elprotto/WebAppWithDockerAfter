@@ -9,6 +9,8 @@
         {
             public const string GetAll = _base + "/posts";
             public const string Get = _base + "/posts/{postId}";
+            public const string Update = _base + "/posts/{postId}";
+            public const string Delete = _base + "/posts/{postId}";
             public const string Create = _base + "/posts";
         }
     }

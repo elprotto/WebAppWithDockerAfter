@@ -30,5 +30,18 @@ namespace WebApplicationWithDocker.Services
         {
             return this.posts;
         }
+
+        public bool updatePost(Post postToUpdate)
+        {
+            var postExist = GetPostById(postToUpdate.Id) != null;
+
+            if (!postExist)
+                return false;
+
+            var index = this.posts.FindIndex(x => x.Id == postToUpdate.Id);
+            this.posts[index] = postToUpdate;
+
+            return true;
+        }
     }
 }
